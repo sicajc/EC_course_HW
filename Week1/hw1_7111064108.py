@@ -60,7 +60,7 @@ with open(r'fixed.out', 'w') as f:
 
 # %%
 splited_text = []
-for text in file_text:
+for text in fixed_out:
     if not text.isdigit():
         splited_text.append(text.split("%"))
 
@@ -81,7 +81,7 @@ print(animals_out)
 splited_text = []
 vegetable = ['corn','carrot','tomato']
 
-for text in file_text:
+for text in fixed_out:
     if not text.isdigit() and not any(item in text for item in vegetable):
         splited_text.append(text.split("%"))
 
