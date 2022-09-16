@@ -33,8 +33,8 @@ wb_list = [str(i) for i in wb_list]
 with open(r'animals.out', 'w') as f:
     for item in sorted_int_list:
         # write each item on a new line
-        f.write("%s\n" % item)
-    f.write('\n')
+        f.write("%s " % item)
+    f.write("\n")
     f.write('\n'.join(wb_list))
 
     print('WB Done')
