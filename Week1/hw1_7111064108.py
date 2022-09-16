@@ -31,9 +31,7 @@ wb_list = [str(i) for i in wb_list]
 #Write file to animals.out
 # open file in write mode
 with open(r'animals.out', 'w') as f:
-    for item in sorted_int_list:
-        # write each item on a new line
-        f.write("%s " % item)
+    f.write(str(sorted_int_list))
     f.write("\n")
     f.write('\n'.join(wb_list))
 
