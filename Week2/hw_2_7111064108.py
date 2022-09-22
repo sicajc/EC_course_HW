@@ -11,6 +11,8 @@ print(sample[:30])
 
 count, bins, ignored = plt.hist(sample, 30, density=True)
 
+
+plt.title("Unform Distribution from 0~1")
 plt.plot(bins, np.ones_like(bins), linewidth=2, color='r')
 
 plt.show()
@@ -32,7 +34,7 @@ plt.plot(bins, 1/(sigma * np.sqrt(2 * np.pi)) *
                np.exp( - (bins - mu)**2 / (2 * sigma**2) ),
 
          linewidth=2, color='r')
-
+plt.title(f"Normal distribution with mean {mu}, std {sigma}")
 plt.show()
 
 # %%
@@ -90,11 +92,6 @@ two_die_six = []
 two_die_six = dice_roll_generator(2,6,10000)
 print(f'type:{type(two_die_six)} , {two_die_six[:5]}')
 
-
-# %%
-plt.hist(two_die_six, 30, density=True)
-plt.title("2d6")
-plt.show()
 
 # %%
 #Creating plot histogram function
