@@ -58,11 +58,7 @@ with open(r'fixed.out', 'w') as f:
     print('WB Done')
 
 # %%
-splited_text = []
-for text in fixed_out:
-    if not text.isdigit():
-        splited_text.append(text.split("%"))
-
+splited_text = [text.split("%") for text in fixed_out if not text.isdigit()]
 print(splited_text[:5])
 
 animals_out = {}
@@ -76,13 +72,9 @@ for text in splited_text:
 
 print(animals_out)
 
-# %%
-splited_text = []
 vegetable = ['corn','carrot','tomato']
 
-for text in fixed_out:
-    if not text.isdigit() and not any(item in text for item in vegetable):
-        splited_text.append(text.split("%"))
+splited_text = [text.split("%") for text in fixed_out if not text.isdigit() and all(item not in text for item in vegetable)]
 
 print(splited_text[:5])
 
@@ -98,9 +90,7 @@ for text in splited_text:
 print(animals_out)
 
 # %%
-sum_of_animal = {}
-sum_of_animal['total_count'] = sum(animals_out.values())
-
+sum_of_animal = {'total_count': sum(animals_out.values())}
 print(sum_of_animal)
 
 # %%
