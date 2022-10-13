@@ -1,11 +1,8 @@
 #
-# ev1.py: The simplest EA ever!
+# ev2.py: Self-adaptive version of ev1/py
 #
-# To run: python ev1.py --input ev1_example.cfg
-#         python ev1.py --input my_params.cfg
+# To run: python ev2.py --input ev2.cfg
 #
-# Note: EV1 is fairly naive and has many fundamental limitations,
-#           however, even though it's simple, it works!
 #
 
 import optparse
@@ -161,9 +158,9 @@ class Individual:
         self.x = x_new
         self.sigma = sigma_new
 
-#EV1: The simplest EA ever!
+#EV2: Modified from EV1 with self-adaptive mutation
 #
-def ev1(cfg):
+def ev2(cfg):
     POP_SIZE = 10
     TAU = 1/POP_SIZE**(1/2)
     SIGMA_MAX = 10
@@ -271,7 +268,7 @@ def main(argv=None):
         print(cfg)
 
         #run EV1
-        generationCount,bestFitness,stateValue,genSTD,genAVG = ev1(cfg)
+        generationCount,bestFitness,stateValue,genSTD,genAVG = ev2(cfg)
 
         #Plot Fitness
         x = np.arange(-100,100,0.1)
