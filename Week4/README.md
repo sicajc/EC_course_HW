@@ -14,14 +14,12 @@
 ## Mutation
 >1. Pick two parents and then with crossover producing new children and mutate them repetitively for 5 times.
 
->2. Save these generated new children into a list.
+>2. Compete these new children with their parents.
 
->3. Compete these new children with their parenets.
+>3. Survivor selection: replace the worst inside population,
+    killing worst child and parents after each child birth.
 
->4. Survivor selection: replace the worst inside population,
-    killing worst child and parents until there are only 10 samples
-    New generation has 10 individuals, competed from 10 parents and
-    5 children
+>4. Repeat 5 times s.t. all 5 children generated can competed with their parents and replace them if needed.
 
 # Testing.
 1. Uses Parabola and Rastrigin function for test.
