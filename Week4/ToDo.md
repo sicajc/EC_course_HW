@@ -5,7 +5,6 @@
 
 >2. The mutation step is determined by $\sigma$, and $\sigma$ would get carried and changed in each mutation for each individual.
 
-
 >3. Individual shall be modified to have
 >* self-adaptive varaible $\sigma$
 >* crossover(self,other) -> return new individual
@@ -19,7 +18,14 @@
 
 >3. Compete these new children with their parenets.
 
->4. Run Replace-Worst selection Competing with parent, only 10 individuals survive.
+>4. Survivor selection: replace the worst inside population,
+    killing worst child and parents until there are only 10 samples
+    New generation has 10 individuals, competed from 10 parents and
+    5 children
 
 # Testing.
-Uses Parabola and Rastrigin function for test.
+1. Uses Parabola and Rastrigin function for test.
+2. During testing, some problem occurs, type error of numpy array to normal float64
+
+# Question
+1. How to do the debug while using config file? It would become harder to trace the code as program becomes larger

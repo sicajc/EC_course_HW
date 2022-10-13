@@ -11,6 +11,7 @@
 import optparse
 import sys
 from typing import Tuple
+from cv2 import exp
 from sympy import cos
 import yaml
 import math
@@ -73,7 +74,10 @@ class EV1_Config:
 #Simple 1-D fitness function example, solving parabolic equations problems. Finding the max of function
 #Also the x s.t. it gets the global maxima.
 def fitnessFunc(x):
-    return -10 - (0.04*x)**2 + 10 * np.cos(0.04*np.pi*x)
+    # result = 50.0 - x*x
+    result = -10 - (0.04*x)**2 + 10 * np.cos(0.04*np.pi*x)
+    #print(f"fitness result {result}")
+    return result
 
 #Find index of worst individual in population
 def findWorstIndex(l):
@@ -84,7 +88,6 @@ def findWorstIndex(l):
             minval=l[i].fit
             imin=i
     return imin
-
 
 #Print some useful stats to screen
 def printStats(pop,gen):
@@ -114,16 +117,57 @@ def printStats(pop,gen):
 
     return generationSTD,generationAVG,bestFitness,stateValue
 
-#A trivial Individual class
+#Modified individual class
 class Individual:
-    def __init__(self,x=0,fit=0):
+    def __init__(self,x=0,fit=0,sigma = 1,tau = 0.3,sigma_max = 30,sigma_min = 0):
         self.x=x
         self.fit=fit
+        self.sigma = sigma
+        self.tau = tau
+        self.sigma_max = sigma_max
+        self.sigma_min = sigma_min
 
+    def crossover(self,other):
+        alpha = np.random.uniform(0,1)
+        #print(f"Alpha = {alpha}")
+        x_new = self.x * alpha + (1 - alpha) * other.x
+
+        return Individual(
+            x = x_new,
+            fit = self.fit,
+            sigma = self.sigma,
+            tau = self.tau,
+            sigma_max = self.sigma_max,
+            sigma_min = self.sigma_min
+        )
+
+    def mutate(self):
+        #Mutate sigma first.
+        sigma_new = self.sigma * exp(self.tau * np.random.normal(0,1))
+        #Normal distribution generate a bunch of vectors in numpy array form
+        #So we extract the float element out.
+        sigma_new = sigma_new[0][0]
+
+        #Sigma has to lie in the bound
+        if sigma_new > self.sigma_max:
+            sigma_new = self.sigma_max
+        elif sigma_new < self.sigma_min:
+            sigma_new = self.sigma_min
+
+        #mutate x
+        x_new = self.x + sigma_new * np.random.normal(0,1)
+
+        #Update sigma and x
+        self.x = x_new
+        self.sigma = sigma_new
 
 #EV1: The simplest EA ever!
 #
 def ev1(cfg):
+    POP_SIZE = 10
+    TAU = 1/POP_SIZE**(1/2)
+    SIGMA_MAX = 10
+    SIGMA_MIN = 0
 
     generationCount = []
     bestFitness     = []
@@ -139,32 +183,44 @@ def ev1(cfg):
     population=[]
     for i in range(cfg.populationSize):
         x=prng.uniform(cfg.minLimit,cfg.maxLimit)
-        ind=Individual(x,fitnessFunc(x))
+        #Each individual has each unique sigma to start with
+        sigma = np.random.uniform(0,5)
+        #print(f"sigma for each individual {i} is {sigma}")
+        ind=Individual(x = x,
+                       fit = fitnessFunc(x),
+                       sigma = sigma,
+                       tau = TAU,
+                       sigma_min =SIGMA_MIN,
+                       sigma_max = SIGMA_MAX)
         population.append(ind)
 
     #print stats
     printStats(population,0)
 
-    #evolution main loop
+    #Evolution main loop
     for i in range(cfg.generationCount):
-        #randomly select two parents from population
+        #Randomly select two parents from population
         parents=prng.sample(population,2)
 
-        #recombine using simple average
-        childx=(parents[0].x+parents[1].x)/2
+        #Create 5 children per generation
+        #Compare each newly generated child with the group.
+        for _ in range(5):
+        #Create new child using crossover function from individual
+            childnew = parents[0].crossover(parents[1])
+            #print("CrossOver")
 
-        #random mutation using normal distribution
-        if prng.random() <= cfg.mutationProb:
-            childx=prng.normalvariate(childx,cfg.mutationStddev)
+        #Mutate the child.
+            childnew.mutate()
+            #print("Mutated")
+        #Survivor selection: replace the worst inside population,
+        #For each newly generated child of the 5 children
+        #Compare it with the parents immediatly after born.
+            child=Individual(childnew.x,fitnessFunc(childnew.x))
+            print(f"Fit calculated, fit result is : {child.fit}")
 
-        #survivor selection: replace the worst inside population, killing worst
-        #Child then replace with the recombined selected child.
-
-        child=Individual(childx,fitnessFunc(childx))
-
-        iworst=findWorstIndex(population)
-        if child.fit > population[iworst].fit:
-            population[iworst]=child
+            iworst=findWorstIndex(population)
+            if child.fit > population[iworst].fit:
+                population[iworst]=child
 
         #print stats, visualize and get the std and avg of each iteration
         generationSTD,generationAvg,bestFit,stateVal = printStats(population,i+1)
@@ -208,6 +264,9 @@ def main(argv=None):
         #Get EV1 config params
         cfg=EV1_Config(options.inputFileName)
 
+        filepath = "ParabolaResult/"
+        #filepath = "RastriginResult/"
+
         #print config params
         print(cfg)
 
@@ -218,6 +277,7 @@ def main(argv=None):
         x = np.arange(-100,100,0.1)
         plt.title("Fitness Funciton")
         plt.plot(x,fitnessFunc(x))
+        plt.savefig(filepath + "Rastrigin.png")
         plt.show()
 
         #Plot fitness and state Value v.s. generation
@@ -226,6 +286,7 @@ def main(argv=None):
         plt.plot(generationCount,bestFitness)
         plt.plot(generationCount,stateValue)
         plt.legend(["Best Fitness","StateValue"])
+        plt.savefig(filepath + "Fitness and state value v.s. generation.png")
         plt.show()
 
         #Plot genSTD and genAVG v.s. generation
@@ -233,6 +294,7 @@ def main(argv=None):
         plt.plot(generationCount,genSTD)
         plt.plot(generationCount,genAVG)
         plt.legend(["Generation STD","Generation Average"])
+        plt.savefig(filepath + "STD and AVG of each generation v.s. generation.png")
         plt.show()
 
         if not options.quietMode:
