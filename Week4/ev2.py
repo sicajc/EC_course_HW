@@ -71,8 +71,8 @@ class EV1_Config:
 #Simple 1-D fitness function example, solving parabolic equations problems. Finding the max of function
 #Also the x s.t. it gets the global maxima.
 def fitnessFunc(x):
-    # result = 50.0 - x*x
-    result = -10 - (0.04*x)**2 + 10 * np.cos(0.04*np.pi*x)
+    result = 50.0 - x*x
+    # result = -10 - (0.04*x)**2 + 10 * np.cos(0.04*np.pi*x)
     #print(f"fitness result {result}")
     return result
 
@@ -274,7 +274,7 @@ def main(argv=None):
         x = np.arange(-100,100,0.1)
         plt.title("Fitness Funciton")
         plt.plot(x,fitnessFunc(x))
-        plt.savefig(filepath + "Rastrigin.png")
+        plt.savefig(filepath + "Parabola.png")
         plt.show()
 
         #Plot fitness and state Value v.s. generation

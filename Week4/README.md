@@ -1,5 +1,9 @@
 # To do list
+# Excecuting the file
 
+```
+    python ev2.py -i ev2.cfg
+```
 ## To enable self adpative do the following
 1. Remove mutationProb and mutationStddev, they are no longer needed, since a sigma would be added to each individual
 
