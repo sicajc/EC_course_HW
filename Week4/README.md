@@ -15,6 +15,13 @@
 * mutate(self) the internal state mutation
 * crossOver operator uses stohastic arithmetic crossover.
 
+```mermaid
+
+   graph TD;
+   Pick_Parents_CrossOver-->NewChildren_Compete_with_parents-->Survivor_Selection;
+
+```
+
 ## Mutation
 1. Pick two parents and then with crossover producing new children and mutate them repetitively for 5 times.
 
