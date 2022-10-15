@@ -1,4 +1,7 @@
 # Notes and To do list
+1. [population management terminology](#population-management-terminology)
+
+2. [Binary Tournament selection](#binary-tournament-selection)
 
 # Population Management Terminology
 - In EC systems we usually manage two primary population, parent population and offspring population
