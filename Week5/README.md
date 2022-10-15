@@ -6,13 +6,13 @@
 - $\mu$ : The general population size
 - $\lambda$ : The offsptring population size
 
-## Two models are usually used
-- ($\mu$,$\lambda$): Survivor only chosen from offspring pop ($\lambda$)
+# Two models are usually used
+- $(\mu,\lambda)$: Survivor only chosen from offspring pop $\lambda$
 
-- ($\mu + \lambda$): Variants where survivors chosen from COMBINED parent & offspring pops
+- $(\mu + \lambda)$: Variants where survivors chosen from COMBINED parent & offspring pops
 
 
-# ($\mu$,$\lambda$)
+# $(\mu,\lambda)$
 
 ```mermaid
     graph TD;
@@ -24,7 +24,7 @@
 
 ```
 
-# ($\mu + \lambda$)
+# $(\mu + \lambda)$
 
 ```mermaid
     graph TD;
