@@ -3,13 +3,15 @@
 
 2. [Binary Tournament selection](#binary-tournament-selection)
 
+3. [EC Models](#two-models-that-are-usually-used)
+
 # Population Management Terminology
 - In EC systems we usually manage two primary population, parent population and offspring population
 
 - $\mu$ : The general population size
 - $\lambda$ : The offsptring population size
 
-# Two models are usually used
+# Two models that are usually used
 - $(\mu,\lambda)$: Survivor only chosen from offspring pop $\lambda$
 
 - $(\mu + \lambda)$: Variants where survivors chosen from COMBINED parent & offspring pops
