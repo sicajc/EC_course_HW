@@ -50,9 +50,9 @@ def binary_tournament(pop_in, prng):
     compete_pairs = []
     for _ in range(pop_size//2):
         #Shuffle the list
-        random.shuffle(pop)
-        x1 = pop.pop()
-        x2 = pop.pop()
+        random.shuffle(pop_in)
+        x1 = pop_in.pop()
+        x2 = pop_in.pop()
         compete_pairs.append([x1,x2])
 
     #2.Conduct binary tournament
