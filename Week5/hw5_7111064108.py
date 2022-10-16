@@ -9,15 +9,14 @@ import numpy as np
 
 #A few useful constants
 #
-pop_size=20
+pop_size=30
 generations=20
-fit_range=50
+fit_range = 40
 
 #Init the random number generator
 #
 prng=Random()
 prng.seed(123)
-
 
 #Let's suppose we have an imaginary problem that generates
 #integer fitness values on some fixed range.  We'll start by randomly
@@ -60,8 +59,10 @@ def binary_tournament(pop_in, prng):
         if mutate == 1:
             pair = [x1,x2]
             #Mutate
-            bias_range = min(fit_range - x1 , fit_range -x2)
-            bias = random.randint(0,bias_range)
+            #Mutate
+            bias_range = min(fit_range - x1 , fit_range -x2,x1,x2)
+            bias = random.randint(-bias_range,bias_range)
+
 
             #Randomly pick a fitness in pair for mutation or simply not mutating
             not_picked_fitness = random.sample(pair,1)[0]
