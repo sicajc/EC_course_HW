@@ -55,7 +55,7 @@
 
 0. Given $N$ pop, $S$ Generations, $F$ fit range, $P$ pop list with $N$ fitness values within fit range $F$
 
-1. Dragging out pairs randomly with Uniform probabilty for competetion creating compete pairs $C$ of size $N/2$.
+1. Dragging out pairs randomly and mutate or not mutate one of the fitness value in pair with randomly for competetion, creating compete pairs $C$ of size $N/2$.
 
 2. Conduct binary tournament first by competing in pairs of fitness value in $C$. The one with lower fitness wins creating $R$ competed result of size $N/2$.
 

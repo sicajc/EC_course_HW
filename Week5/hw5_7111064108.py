@@ -46,13 +46,32 @@ def binary_tournament(pop_in, prng):
     newPop=[]
 
     #Binary Tournament
-    #1. Creating compete pairs
+
+    #1. Creating mutated compete pairs
     compete_pairs = []
     for _ in range(pop_size//2):
+        mutate = random.randint(0,1)
         #Shuffle the list
         random.shuffle(pop_in)
         x1 = pop_in.pop()
         x2 = pop_in.pop()
+
+        #Mutation by adding bias.
+        if mutate == 1:
+            pair = [x1,x2]
+            #Mutate
+            bias_range = min(fit_range - x1 , fit_range -x2)
+            bias = random.randint(0,bias_range)
+
+            #Randomly pick a fitness in pair for mutation or simply not mutating
+            not_picked_fitness = random.sample(pair,1)[0]
+
+            pair.remove(not_picked_fitness)
+            picked_fitness = pair[0]
+            biased_fitness = picked_fitness + bias
+
+            x1,x2 = biased_fitness,picked_fitness
+
         compete_pairs.append([x1,x2])
 
     #2.Conduct binary tournament
