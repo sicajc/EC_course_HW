@@ -44,15 +44,18 @@ def plt_hist(pop, generation=0, bin_limit=fit_range):
 def binary_tournament(pop_in, prng):
     newPop=[]
 
+    if(len(pop_in) == 1): return pop_in
     #Binary Tournament
     competed_result = []
-    for _ in range(pop_size//2):
+
+    for _ in range(len(pop_in)//2):
         # mutate = random.randint(0,1)
         #Shuffle the list
         #1. Creating compete pairs
         random.shuffle(pop_in)
+
         x1 = pop_in.pop()
-        x2 = pop_in.pop()
+        x2 = fit_range if len(pop_in)==1 else pop_in.pop()
 
         #2. binary tournament
         if x1 < x2:
@@ -61,11 +64,11 @@ def binary_tournament(pop_in, prng):
             competed_result.append(x2)
 
     #3. Mating
-    for _ in range(pop_size//2):
-        parent = random.sample(competed_result,2)
-        alpha = np.random.uniform(0,1)
-        child = parent[0] * alpha + (1 - alpha) * parent[1]
-        competed_result.append(int(child))
+    # for _ in range(pop_size//2):
+        # parent = random.sample(competed_result,2)
+        # alpha = np.random.uniform(0,1)
+        # child = parent[0] * alpha + (1 - alpha) * parent[1]
+        # competed_result.append(int(child))
 
     newPop = competed_result
     #print(f"Length of newPop = {len(newPop)}")
