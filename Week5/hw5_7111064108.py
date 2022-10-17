@@ -42,7 +42,6 @@ def plt_hist(pop, generation=0, bin_limit=fit_range):
 #  - All individuals from input population should participate in exactly 2 tournaments
 #
 def binary_tournament(pop_in, prng):
-    newPop=[]
 
     if(len(pop_in) == 1): return pop_in
     #Binary Tournament
@@ -55,7 +54,7 @@ def binary_tournament(pop_in, prng):
         random.shuffle(pop_in)
 
         x1 = pop_in.pop()
-        x2 = fit_range if len(pop_in)==1 else pop_in.pop()
+        x2 = pop_in.pop()
 
         #2. binary tournament
         if x1 < x2:
@@ -63,16 +62,7 @@ def binary_tournament(pop_in, prng):
         else:
             competed_result.append(x2)
 
-    #3. Mating
-    # for _ in range(pop_size//2):
-        # parent = random.sample(competed_result,2)
-        # alpha = np.random.uniform(0,1)
-        # child = parent[0] * alpha + (1 - alpha) * parent[1]
-        # competed_result.append(int(child))
-
-    newPop = competed_result
-    #print(f"Length of newPop = {len(newPop)}")
-    return newPop
+    return competed_result
 
 
 #Let's iteratively apply our binary selection operator
