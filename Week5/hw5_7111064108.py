@@ -9,8 +9,8 @@ import numpy as np
 
 #A few useful constants
 #
-pop_size=30
-generations=20
+pop_size=20
+generations=15
 fit_range = 40
 
 #Init the random number generator
@@ -46,7 +46,7 @@ def binary_tournament(pop_in, prng):
 
     #Binary Tournament
 
-    #1. Creating mutated compete pairs
+    #1. Creating compete pairs
     compete_pairs = []
     for _ in range(pop_size//2):
         mutate = random.randint(0,1)
@@ -59,10 +59,8 @@ def binary_tournament(pop_in, prng):
         if mutate == 1:
             pair = [x1,x2]
             #Mutate
-            #Mutate
             bias_range = min(fit_range - x1 , fit_range -x2,x1,x2)
             bias = random.randint(-bias_range,bias_range)
-
 
             #Randomly pick a fitness in pair for mutation or simply not mutating
             not_picked_fitness = random.sample(pair,1)[0]
@@ -91,7 +89,7 @@ def binary_tournament(pop_in, prng):
         competed_result.append(int(child))
 
     newPop = competed_result
-
+    #print(f"Length of newPop = {len(newPop)}")
     return newPop
 
 
