@@ -46,15 +46,16 @@ def binary_tournament(pop_in, prng):
 
     #Binary Tournament
 
-    #1. Creating compete pairs
-    compete_pairs = []
+    competed_result = []
     for _ in range(pop_size//2):
-        mutate = random.randint(0,1)
+        # mutate = random.randint(0,1)
         #Shuffle the list
+        #1. Creating compete pairs
         random.shuffle(pop_in)
         x1 = pop_in.pop()
         x2 = pop_in.pop()
 
+        """
         #Mutation by adding bias.
         if mutate == 1:
             pair = [x1,x2]
@@ -70,16 +71,21 @@ def binary_tournament(pop_in, prng):
             biased_fitness = picked_fitness + bias
 
             x1,x2 = biased_fitness,picked_fitness
+        """
+        #2. binary tornament
+        if x1 < x2:
+            competed_result.append(x1)
+        else:
+            competed_result.append(x2)
 
-        compete_pairs.append([x1,x2])
 
     #2.Conduct binary tournament
-    competed_result = []
-    for pairs in compete_pairs:
-        if pairs[0] < pairs[1]:
-            competed_result.append(pairs[0])
-        else:
-            competed_result.append(pairs[1])
+    #
+    # for pairs in compete_pairs:
+    #     if pairs[0] < pairs[1]:
+    #         competed_result.append(pairs[0])
+    #     else:
+    #         competed_result.append(pairs[1])
 
     #3. Perform mating,create children using weight bias
     for _ in range(pop_size//2):
