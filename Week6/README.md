@@ -8,9 +8,10 @@
   - [Questions when programming](#questions-when-programming)
 - [Improved EV3 in solving Combinatorial energy minimization problem.](#improved-ev3-in-solving-combinatorial-energy-minimization-problem)
   - [Introduction & Goals](#introduction--goals)
-  - [Sanity checks](#sanity-checks)
-  - [Structures of EV3](#structures-of-ev3)
-  - [Development steps of EV3](#development-steps-of-ev3)
+  - [Problem1](#problem1)
+    - [Procedures](#procedures)
+  - [Problem 2](#problem-2)
+    - [Procedures](#procedures-1)
   - [Results & Performance](#results--performance)
   - [References](#references)
 
@@ -61,21 +62,54 @@ A:
 2. Problem #2:
    - Upgrade EV3 real-number representation to handle multivariate problems, meaning that representation must handle problems with more than one variables(Requring a number of vectors)
 
-3. For Problem #1
+   - Demonstrate by optimizaing given 2-D multi-dimensional Rastrigrin function.
 
+3. For Problem #1
    1. Finite 1D discrete lattice with 3 types of particles
       - Lattice length is N
       - 3 particles types: Red Blue and Green(label as 0,1,2)
+   2. Every point on the lattice has exactly 1 particle
+      - No empty lattice sites
+      - Never more than  one particle on a site
+   3. Particles have self-energies and interaction energies ,and a known total enery function
 
-   2. Every point of lattice
+## Problem1
+- Minimize the total energy of given lattice of length N by choosing assignment of particle types on lattice.
+- In the energy function calculation, we only need to consider the energy interaction i.u. adjacent to each particles. Distance more than 1 does not need to be considered.
+- Use Self-adaptive mutation rate.
+- Use combinatorial integer representation(vectors of integers)
+- Following input parameters are needed.
+   - selfEnergVector: [](LIST OF M, M is number of particles types)
+   - interactionEnergyMatrix:$[[.],[.],[.]]$
+   - latticeLength: N (an int, N is the length of 1-D lattice)
+   - numParticleType: M(an int,where M is the number of particle types)
+
+- Test with $N = 11, u=[1,2,3] t = [[10,4,1],[4,10,5],[1,5,10]]$
+### Procedures
+0. Read in self Energy Vector $u$, interaction Energy Matrix $t$, latticeLength $N$, ParticleTypes $M$, Learning Rate as $L$, Pop Size as $P$
+
+1. Create POPSIZE $P$ numbers of lattices from ParticleTypes $M$ and latticeLength $N$, each with its length $N$ and Random vector representation by shuffling.
+   - Each position of the vector representation is positioned with randomly chosen quantum type from $M$ types of particles. With self-adaptive parameter $\sigma$
+
+   - Generate $P$ of these sequences.
+
+2. Creating $(P * L)$ new children using the Simple Random cut and piecing back CrossOver
+
+3. Then Perform mutation with self parameter $\sigma$ for each newly generated child. $\sigma$ determines percentage of quantums that needed to be mutated into other type inside the sequence.
+
+4. Search for $t$ and $u$, to calculate the total energy value of the child, the fit is the energy required for this sequence, then later kick the one with largest energy off from the Pop.
+
+5. Pick out the Best fit and StateValue v.s. generations Plot from the Pop to monitor the Progress.
+
+6. Repeat the process until generations are over.
 
 
+## Problem 2
+- Enhance EV3 real-number individual class to support MULTI-VARIATE Functions(A vectors of floats)
+- Enhance EV3 to support minimization and maximization
+- Test implementation by finding global minimum of 2-D Rastrigrin function(n=2):
 
-## Sanity checks
-
-## Structures of EV3
-
-## Development steps of EV3
+### Procedures
 
 ## Results & Performance
 
