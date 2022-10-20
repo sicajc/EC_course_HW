@@ -43,7 +43,8 @@ def plt_hist(pop, generation=0, bin_limit=fit_range):
 #
 def binary_tournament(pop_in, prng):
 
-    if(len(pop_in) == 1): return pop_in
+    pop_copy = pop_in.copy()
+
     #Binary Tournament
     competed_result = []
 
@@ -56,6 +57,19 @@ def binary_tournament(pop_in, prng):
         x1 = pop_in.pop()
         x2 = pop_in.pop()
 
+        #2. binary tournament
+        if x1 < x2:
+            competed_result.append(x1)
+        else:
+            competed_result.append(x2)
+
+    for _ in range(len(pop_copy)//2):
+        # mutate = random.randint(0,1)
+        #Shuffle the list
+        #1. Creating compete pairs
+        random.shuffle(pop_copy)
+        x1 = pop_copy.pop()
+        x2 = pop_copy.pop()
         #2. binary tournament
         if x1 < x2:
             competed_result.append(x1)
