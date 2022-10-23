@@ -2,6 +2,9 @@
 ## Index
 - [Course note.](#course-note)
   - [Index](#index)
+  - [To run Problem 1](#to-run-problem-1)
+  - [To run Problem 2 MIN](#to-run-problem-2-min)
+  - [To run Problem 2 MAX](#to-run-problem-2-max)
 - [Code architecture and testing](#code-architecture-and-testing)
   - [What shall be tested?](#what-shall-be-tested)
   - [Diversity in individuals](#diversity-in-individuals)
@@ -13,6 +16,25 @@
   - [Problem 2](#problem-2)
     - [Procedures](#procedures-1)
 - [Final integrated EV3](#final-integrated-ev3)
+
+## To run Problem 1
+At directory $src/Final$ type the following
+```
+   python ev3.py -i problem1.cfg
+
+```
+
+## To run Problem 2 MIN
+```
+   python ev3.py -i problem2_MIN.cfg
+
+```
+
+## To run Problem 2 MAX
+```
+   python ev3.py -i problem2_MAX.cfg
+
+```
 
 # Code architecture and testing
 - Testing and data reading and writing in a seperate way s.t. it can be flexible.
