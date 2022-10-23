@@ -18,6 +18,9 @@ import yaml
 import math
 from random import Random
 from Population import *
+from Individual import *
+from fitnessFunc import *
+import matplotlib.pyplot as plt
 
 
 #EV3 Config class
@@ -30,13 +33,15 @@ class EV3_Config:
     options={'populationSize': (int,True),
              'generationCount': (int,True),
              'randomSeed': (int,True),
-             'crossoverFraction':(int,True),
+             'crossoverFraction':(float,True),
              'minLimit': (float,True),
              'maxLimit': (float,True),
-             'selfEnergyVector':(List,True),
-             'interactionEnergyMatrix':(List,True),
-             'latticeLength':(int,True),
+             'selfEnergyVector':(list,True),
+             'interactionEnergyMatrix':(list,True),
+             'sequenceLength':(int,True),
              'numParticleType':(int,True),
+             'problemType':(str,True),
+             'mode':(str,True)
              }
 
     #constructor
@@ -69,11 +74,11 @@ class EV3_Config:
     def __str__(self):
         return str(yaml.dump(self.__dict__,default_flow_style=False))
 
-
-#Simple fitness function example: 1-D Rastrigin function
-def fitnessFunc(x):
-    return -10.0-(0.04*x)**2+10.0*math.cos(0.04*math.pi*x)
-
+def plot_graph(filepath,data,generationCount,title):
+    plt.title(title)
+    plt.plot(generationCount,data)
+    plt.savefig(filepath + title +".png")
+    plt.show()
 
 #Print some useful stats to screen
 def printStats(pop,gen):
@@ -97,6 +102,7 @@ def printStats(pop,gen):
 #EV3:
 #
 def ev3(cfg):
+    filepath = "Result/"
     #start random number generators
     uniprng=Random()
     uniprng.seed(cfg.randomSeed)
@@ -105,23 +111,38 @@ def ev3(cfg):
 
     #set static params on classes
     # (probably not the most elegant approach, but let's keep things simple...)
-    Individual.minLimit=cfg.minLimit
-    Individual.maxLimit=cfg.maxLimit
-    Individual.fitFunc=fitnessFunc
-    Individual.uniprng=uniprng
-    Individual.normprng=normprng
-    Population.uniprng=uniprng
-    Population.crossoverFraction=cfg.crossoverFraction
+    Individual.problemType          =   cfg.problemType
+    Individual.minLimit             =   cfg.minLimit
+    Individual.maxLimit             =   cfg.maxLimit
+    Individual.fitFunc              =   CalulateEnergy if cfg.problemType == 'Problem1' else N_Dimensional_Rastrigin
+    Individual.uniprng              =   uniprng
+    Individual.normprng             =   normprng
 
+    Population.uniprng              =   uniprng
+    Population.crossoverFraction    =   cfg.crossoverFraction
+    Population.problemType          =   cfg.problemType
+    Population.mode                 =   cfg.mode
+    Population.numParticleType      =   cfg.numParticleType
+    Population.fitFunc              =   CalulateEnergy if cfg.problemType == 'Problem1' else N_Dimensional_Rastrigin
+
+    #For Problem1
+    Population.interactionEnergyMatrix = cfg.interactionEnergyMatrix
+    Population.selfEnergyVector        = cfg.selfEnergyVector
 
     #create initial Population (random initialization)
-    population=Population(cfg.populationSize)
+    if cfg.problemType== 'Problem1':
+        population = Population(populationSize = cfg.populationSize,
+                                sequenceLength = cfg.sequenceLength)
+    else:
+        population = Population(populationSize= cfg.populationSize,sequenceLength=cfg.sequenceLength)
 
-    #print initial pop stats
-    printStats(population,0)
+
+    generationCountList = []
+    bestFitnessList     = []
 
     #evolution main loop
     for i in range(cfg.generationCount):
+        generationCountList.append(i)
         #create initial offspring population by copying parent pop
         offspring=population.copy()
 
@@ -141,9 +162,16 @@ def ev3(cfg):
         population.combinePops(offspring)
         population.truncateSelect(cfg.populationSize)
 
-        #print population stats
-        printStats(population,i+1)
+        #ReEvaluate population
+        population.evaluateFitness()
+        bestFitnessList.append(population.bestFitness)
 
+    population.print_info()
+
+    plot_graph(filepath = filepath,
+               generationCount = generationCountList,
+               data = bestFitnessList,
+               title = f'{population.problemType} with {population.mode} BestFitness')
 
 #
 # Main entry point
@@ -184,6 +212,7 @@ def main(argv=None):
             print_exc()
         else:
             print(info)
+
 
 
 if __name__ == '__main__':

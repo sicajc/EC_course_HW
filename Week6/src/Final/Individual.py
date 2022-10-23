@@ -47,6 +47,7 @@ class Individual:
     def crossover(self, other):
         child = copy.deepcopy(self)
         child.sequence = []
+
         sequenceLength = len(self.sequence)
         #Set alpha
         alpha= self.uniprng.uniform(0,1)
@@ -64,29 +65,34 @@ class Individual:
 
     def mutate(self):
 
-        self.sigma=self.sigma*math.exp(self.learningRate*self.normprng.normalvariate(0,1))
+        self.sigma =self.sigma*math.exp(self.learningRate*self.normprng.normalvariate(0,1))
         if self.sigma < self.minSigma: self.sigma=self.minSigma
         if self.sigma > self.maxSigma: self.sigma=self.maxSigma
 
-        if self.sigma > 0.3:
-            if self.problemType == 'Problem2':
-                #Float Vector CrossOver
-                for i,x in enumerate(self.sequence):
-                    #Shift the value of x to postive first
-                    tmp = x + abs(self.minLimit)
-                    #Bias can only be positive, there would be no negative bias
-                    bias = (self.maxLimit-self.minLimit)*self.sigma*self.normprng.normalvariate(0,1)
-                    tmp = bias + tmp
-                    #Shift x back
-                    self.sequence[i] = tmp - abs(self.minLimit)
-            else:
-                #QuantumLattice CrossOver
-                #Mutation by changing the quantum types within a lattice
-                NumOfMutateParticles = self.uniprng.randrange(0,int(self.sigma*self.latticeLength)+1)
-                for _ in range(NumOfMutateParticles):
-                    self.uniprng.shuffle(self.sequence)
-                    self.sequence.pop()
-                    self.sequence.append(self.uniprng.randrange(0,self.numParticleType))
+        if self.problemType == 'Problem2':
+            #Float Vector CrossOver, note it cannot goes beyond the min and max value of x = [-5.12,5.12]
+            for i,x in enumerate(self.sequence):
+                #Shift the value of x to postive first
+                tmp = x + abs(self.minLimit)
+                #Bias can only be positive, there would be no negative bias
+                bias = (self.maxLimit-self.minLimit)*self.sigma*self.normprng.normalvariate(0,1)
+                tmp = bias + tmp
+                #Shift x back
+                mutated_value = tmp - abs(self.minLimit)
+
+                if mutated_value > self.maxLimit:
+                    self.sequence[i]  = self.maxLimit
+                elif mutated_value < self.minLimit:
+                    self.sequence[i]  = self.minLimit
+                else:
+                    self.sequence[i]  = mutated_value
+        else:
+            #QuantumLattice CrossOver
+            #Mutation by changing the quantum types within a lattice
+            for _ in range(len(self.sequence)):
+                self.uniprng.shuffle(self.sequence)
+                self.sequence.pop()
+                self.sequence.append(self.uniprng.randrange(0,self.numParticleType))
 
     def evaluateFitness(self,
                         interactionMatrix = None,

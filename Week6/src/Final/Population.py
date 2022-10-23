@@ -71,7 +71,7 @@ class Population:
 
         if self.mode == 'MIN':
             bestFitness = min(fitnessDistribution)
-        else:
+        elif self.mode == 'MAX':
             bestFitness = max(fitnessDistribution)
 
         bestFitness_idx = fitnessDistribution.index(bestFitness)
@@ -87,7 +87,8 @@ class Population:
             individual.mutate()
 
     def crossover(self):
-        children = []
+        children = copy.deepcopy(self)
+        children.population = []
         indexList1=list(range(len(self.population)))
         indexList2=list(range(len(self.population)))
         self.uniprng.shuffle(indexList1)
@@ -96,26 +97,15 @@ class Population:
         if self.crossoverFraction == 1.0:
             for index1,index2 in zip(indexList1,indexList2):
                 childx = self.population[index1].crossover(self.population[index2])
-                children.append(childx)
+                children.population.append(childx)
         else:
             for index1,index2 in zip(indexList1,indexList2):
                 rn= self.uniprng.random()
                 if rn <  self.crossoverFraction:
                     childx = self.population[index1].crossover(self.population[index2])
-                    children.append(childx)
+                    children.population.append(childx)
 
-        # Childrem Compete then Replace some parents.
-        for childx in children:
-            for idx, parent in enumerate(self.population):
-                if self.mode == 'MIN':
-                    if childx.fit < parent.fit:
-                        self.population[idx] = childx
-                        break
-                else:
-                    if childx.fit > parent.fit:
-                        self.population[idx] = childx
-                        break
-
+        children.evaluateFitness()
 
     def conductTournament(self):
         # binary tournament
@@ -148,7 +138,7 @@ class Population:
                         newPop.append(copy.deepcopy(self.population[index1]))
                     else:
                         newPop.append(copy.deepcopy(self.population[index2]))
-            else:
+            elif self.mode == 'MAX':
                 if self.population[index1].fit > self.population[index2].fit:
                     newPop.append(copy.deepcopy(self.population[index1]))
                 elif self.population[index1].fit < self.population[index2].fit:
@@ -170,7 +160,7 @@ class Population:
         #sort by fitness
         if self.mode == 'MIN':
             self.population.sort(key=attrgetter('fit'),reverse=False)
-        else:
+        elif self.mode == 'MAX':
             self.population.sort(key=attrgetter('fit'),reverse=True)
 
         #then truncate the bottom
