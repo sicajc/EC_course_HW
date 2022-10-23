@@ -12,6 +12,7 @@
     - [Procedures](#procedures)
   - [Problem 2](#problem-2)
     - [Procedures](#procedures-1)
+- [Final integrated EV3](#final-integrated-ev3)
 
 # Code architecture and testing
 - Testing and data reading and writing in a seperate way s.t. it can be flexible.
@@ -115,3 +116,24 @@ A:
 3. Changing the initialization function to integer generations
 
 4. Changing the Input Parameter into other parameters.
+
+
+# Final integrated EV3
+
+```mermaid
+
+   graph TD;
+   A(EV3);
+   B(Individual);
+   C(Population);
+   D(Float Vecotr for N-d Rastrigin);
+   E(Integer Vector for Quantum Lattice);
+   F(Integration);
+   A --> B;
+   B --> D;
+   B --> E;
+   D --> C;
+   E --> C;
+   C --> F;
+
+```

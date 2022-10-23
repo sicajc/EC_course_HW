@@ -69,15 +69,10 @@ class EV3_Config:
     def __str__(self):
         return str(yaml.dump(self.__dict__,default_flow_style=False))
 
-#Different fitness function shall be selected.
-def fitnessFunc(x_vec):
-    An = 10
-    sum = 0
-    for i in range(len(x_vec)):
-        sum += x_vec[i]**2 - An*math.cos(2*math.pi*x_vec[i])
 
-    fitness = An + sum
-    return fitness
+#Simple fitness function example: 1-D Rastrigin function
+def fitnessFunc(x):
+    return -10.0-(0.04*x)**2+10.0*math.cos(0.04*math.pi*x)
 
 
 #Print some useful stats to screen

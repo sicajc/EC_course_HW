@@ -9,7 +9,6 @@ import math
 from random import Random
 import copy
 
-#A simple 1-D Individual class
 class Individual:
     """
     Individual
