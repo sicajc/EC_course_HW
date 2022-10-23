@@ -14,6 +14,8 @@
 import optparse
 import sys
 from typing import List
+from matplotlib import markers
+from numpy import linspace
 import yaml
 import math
 from random import Random
@@ -21,6 +23,8 @@ from Population import *
 from Individual import *
 from fitnessFunc import *
 import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import cm
 
 
 #EV3 Config class
@@ -136,7 +140,6 @@ def ev3(cfg):
     else:
         population = Population(populationSize= cfg.populationSize,sequenceLength=cfg.sequenceLength)
 
-
     generationCountList = []
     bestFitnessList     = []
 
@@ -172,6 +175,33 @@ def ev3(cfg):
                generationCount = generationCountList,
                data = bestFitnessList,
                title = f'{population.problemType} with {population.mode} BestFitness')
+
+    x,y = population.bestIndividual
+    z   = population.bestFitness
+    #Generate 3-D Plot for Rastrigin function and its MIN and MAX
+    fig = plt.figure(figsize=(4,4))
+    ax = fig.add_subplot(projection='3d')
+    fitness =[]
+    title = "3-D Rastrigrin Function"
+    #Use sampling point to enable better Plot
+    x1 = np.arange(cfg.minLimit,cfg.maxLimit,0.01).astype('float16')
+    x2 = np.arange(cfg.minLimit,cfg.maxLimit,0.01).astype('float16')
+
+    X, Y = np.meshgrid(x1, x2)
+    zs = np.array([N_Dimensional_Rastrigin([x,y]) for x,y in zip(np.ravel(X), np.ravel(Y))])
+    zs =zs.reshape(X.shape)
+
+    # Creating color map
+    my_cmap = plt.get_cmap('hot')
+    #Plot function is better
+    ax.plot_surface(X, Y, zs, cmap = cm.ocean)
+    ax.scatter(x,y,z, c = 'r', marker='o')
+    ax.text(x, y, z, population.mode + f'({x:.3},{y:.3},{z:.3})', color='red',size = 50)
+    ax.set_title(title)
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+    plt.savefig(filepath + title +".png")
+    plt.show()
 
 #
 # Main entry point

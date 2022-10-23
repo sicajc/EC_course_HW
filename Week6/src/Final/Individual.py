@@ -70,7 +70,7 @@ class Individual:
         if self.sigma > self.maxSigma: self.sigma=self.maxSigma
 
         if self.problemType == 'Problem2':
-            #Float Vector CrossOver, note it cannot goes beyond the min and max value of x = [-5.12,5.12]
+        #Float Vector CrossOver, note it cannot goes beyond the min and max value of x = [-5.12,5.12]
             for i,x in enumerate(self.sequence):
                 #Shift the value of x to postive first
                 tmp = x + abs(self.minLimit)

@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 def N_Dimensional_Rastrigin(x_vec):
     A = 10
