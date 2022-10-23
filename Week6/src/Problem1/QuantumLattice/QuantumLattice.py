@@ -12,28 +12,28 @@ class QuantumLattice:
     """
     QuantumLattice
     """
-    minSigma=1e-100
-    maxSigma=1
-    learningRate=1
     numParticleType = 2
     latticeLength = 3
-    minLimit=None
-    maxLimit=None
-    uniprng=None
-    normprng=None
-    fitFunc=None
 
-    def __init__(self,latticeLength,numParticleType):
+    def __init__(self,latticeLength,numParticleType,minSigma,maxSigma,learningRate):
         #lattice full of quantum
         self.latticeLength = latticeLength
         self.numParticleType = numParticleType
+        self.minSigma = minSigma
+        self.maxSigma = maxSigma
+        self.learningRate = learningRate
+
         #self.fit=self.__class__.fitFunc(self.x)
         self.sigma=random.uniform(0.9,0.1) #use "normalized" sigma
         self.lattice=[random.randrange(0,self.numParticleType) for _ in range(self.latticeLength)]
         self.energy = 0
 
     def crossover(self, other):
-        child = QuantumLattice(latticeLength=self.latticeLength,numParticleType=self.numParticleType)
+        child = QuantumLattice(latticeLength=self.latticeLength,
+                               numParticleType=self.numParticleType,
+                               minSigma=self.minSigma,
+                               maxSigma=self.maxSigma,
+                               learningRate=self.learningRate)
 
         #perform crossover "in-place"
         alpha= random.uniform(0,1)
@@ -54,7 +54,6 @@ class QuantumLattice:
 
     def mutate(self):
         #Mutate by Randomly changing the type of particles in lattice
-
         #Mutation param, determines how many quantums needed to be changed.
         self.sigma=self.sigma*math.exp(self.learningRate*random.normalvariate(0,1))
         if self.sigma < self.minSigma: self.sigma=self.minSigma

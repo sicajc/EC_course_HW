@@ -12,8 +12,6 @@
     - [Procedures](#procedures)
   - [Problem 2](#problem-2)
     - [Procedures](#procedures-1)
-  - [Results & Performance](#results--performance)
-  - [References](#references)
 
 # Code architecture and testing
 - Testing and data reading and writing in a seperate way s.t. it can be flexible.
@@ -106,11 +104,14 @@ A:
 
 ## Problem 2
 - Enhance EV3 real-number individual class to support MULTI-VARIATE Functions(A vectors of floats)
-- Enhance EV3 to support minimization and maximization
+- Enhance EV3 to support both minimization and maximization mode.
 - Test implementation by finding global minimum of 2-D Rastrigrin function(n=2):
 
 ### Procedures
+1. Same as Problem 1 but instead of aiming for minimum fitness, we have to add the function to allow maximum fitness too
 
-## Results & Performance
+2. Changing the Fitness function to N dimensional rastrigin function
 
-## References
+3. Changing the initialization function to integer generations
+
+4. Changing the Input Parameter into other parameters.

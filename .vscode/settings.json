@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./Week6/src/Problem1/LatticePopulation"
+    ]
+}

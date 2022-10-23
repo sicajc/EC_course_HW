@@ -15,3 +15,6 @@ def CalulateEnergy(lattice,interactionMatrix,selfEnergyVector):
 
     #print(f"Energy after interation:{totalEnergy}")
     return totalEnergy
+
+u = [1,2]
+print(type(u))
