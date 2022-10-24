@@ -105,7 +105,7 @@ class Population:
                     childx = self.population[index1].crossover(self.population[index2])
                     children.population.append(childx)
 
-        children.evaluateFitness()
+        return children
 
     def conductTournament(self):
         # binary tournament

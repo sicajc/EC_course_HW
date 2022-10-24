@@ -9,7 +9,6 @@
 #   - Supports self-adaptive mutation
 #   - Uses binary tournament selection for mating pool
 #   - Uses elitist truncation selection for survivors
-#
 
 import optparse
 import sys
@@ -25,7 +24,6 @@ from fitnessFunc import *
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import cm
-
 
 #EV3 Config class
 class EV3_Config:
@@ -118,7 +116,8 @@ def ev3(cfg):
     Individual.problemType          =   cfg.problemType
     Individual.minLimit             =   cfg.minLimit
     Individual.maxLimit             =   cfg.maxLimit
-    Individual.fitFunc              =   CalulateEnergy if cfg.problemType == 'Problem1' else N_Dimensional_Rastrigin
+    Individual.fitFunc              =  CalulateEnergy if cfg.problemType == 'Problem1' else N_Dimensional_Rastrigin
+
     Individual.uniprng              =   uniprng
     Individual.normprng             =   normprng
 
@@ -127,7 +126,7 @@ def ev3(cfg):
     Population.problemType          =   cfg.problemType
     Population.mode                 =   cfg.mode
     Population.numParticleType      =   cfg.numParticleType
-    Population.fitFunc              =   CalulateEnergy if cfg.problemType == 'Problem1' else N_Dimensional_Rastrigin
+    Population.fitFunc              =  CalulateEnergy if cfg.problemType == 'Problem1'else N_Dimensional_Rastrigin
 
     #For Problem1
     Population.interactionEnergyMatrix = cfg.interactionEnergyMatrix
@@ -138,13 +137,16 @@ def ev3(cfg):
         population = Population(populationSize = cfg.populationSize,
                                 sequenceLength = cfg.sequenceLength)
     else:
-        population = Population(populationSize= cfg.populationSize,sequenceLength=cfg.sequenceLength)
+        population = Population(populationSize= cfg.populationSize,
+                                sequenceLength=cfg.sequenceLength)
 
     generationCountList = []
     bestFitnessList     = []
+    generationCost = 0
 
     #evolution main loop
     for i in range(cfg.generationCount):
+
         generationCountList.append(i)
         #create initial offspring population by copying parent pop
         offspring=population.copy()
@@ -153,16 +155,16 @@ def ev3(cfg):
         offspring.conductTournament()
 
         #perform crossover
-        offspring.crossover()
+        children = offspring.crossover()
 
         #random mutation
-        offspring.mutate()
+        children.mutate()
 
         #update fitness values
-        offspring.evaluateFitness()
+        children.evaluateFitness()
 
         #survivor selection: elitist truncation using parents+offspring
-        population.combinePops(offspring)
+        population.combinePops(children)
         population.truncateSelect(cfg.populationSize)
 
         #ReEvaluate population
@@ -176,32 +178,33 @@ def ev3(cfg):
                data = bestFitnessList,
                title = f'{population.problemType} with {population.mode} BestFitness')
 
-    x,y = population.bestIndividual
-    z   = population.bestFitness
-    #Generate 3-D Plot for Rastrigin function and its MIN and MAX
-    fig = plt.figure(figsize=(4,4))
-    ax = fig.add_subplot(projection='3d')
-    fitness =[]
-    title = "3-D Rastrigrin Function"
-    #Use sampling point to enable better Plot
-    x1 = np.arange(cfg.minLimit,cfg.maxLimit,0.01).astype('float16')
-    x2 = np.arange(cfg.minLimit,cfg.maxLimit,0.01).astype('float16')
+    if population.problemType == 'Problem2':
+        x,y = population.bestIndividual
+        z   = population.bestFitness
 
-    X, Y = np.meshgrid(x1, x2)
-    zs = np.array([N_Dimensional_Rastrigin([x,y]) for x,y in zip(np.ravel(X), np.ravel(Y))])
-    zs =zs.reshape(X.shape)
+        #Generate 3-D Plot for Rastrigin function and its MIN and MAX
+        fig = plt.figure(figsize=(4,4))
+        ax = fig.add_subplot(projection='3d')
+        fitness =[]
+        title = "3-D Rastrigrin Function"
 
-    # Creating color map
-    my_cmap = plt.get_cmap('hot')
-    #Plot function is better
-    ax.plot_surface(X, Y, zs, cmap = cm.ocean)
-    ax.scatter(x,y,z, c = 'r', marker='o')
-    ax.text(x, y, z, population.mode + f'({x:.3},{y:.3},{z:.3})', color='red',size = 50)
-    ax.set_title(title)
-    ax.set_xlabel("x1")
-    ax.set_ylabel("x2")
-    plt.savefig(filepath + title +".png")
-    plt.show()
+        #Use sampling point to enable better Plot
+        x1 = np.arange(cfg.minLimit,cfg.maxLimit,0.01).astype('float16')
+        x2 = np.arange(cfg.minLimit,cfg.maxLimit,0.01).astype('float16')
+
+        X, Y = np.meshgrid(x1, x2)
+        zs = np.array([N_Dimensional_Rastrigin([x,y]) for x,y in zip(np.ravel(X), np.ravel(Y))])
+        zs =zs.reshape(X.shape)
+
+        #Plot function is better
+        ax.plot_surface(X, Y, zs, cmap = cm.ocean)
+        ax.scatter(x,y,z, c = 'r', marker='o')
+        ax.text(x, y, z, population.mode + f'({x:.3},{y:.3},{z:.3})', color='red',size = 50)
+        ax.set_title(title)
+        ax.set_xlabel("x1")
+        ax.set_ylabel("x2")
+        plt.savefig(filepath + title +".png")
+        plt.show()
 
 #
 # Main entry point
@@ -209,7 +212,6 @@ def ev3(cfg):
 def main(argv=None):
     if argv is None:
         argv = sys.argv
-
     try:
         #
         # get command-line options
