@@ -5,7 +5,9 @@
 
 import math
 import copy
-from random import Random
+from pickletools import float8
+from random import Random, normalvariate
+import numpy as np
 
 #A simple 1-D Individual class
 class Individual:
@@ -33,13 +35,13 @@ class Individual:
         if self.problemType == 'Problem1':
             self.numParticleType = numParticleType
             self.latticeLength = latticeLength
-            self.sequence = [self.uniprng.randrange(0,self.numParticleType) for _ in range(latticeLength)]
+            self.sequence = [self.uniprng.randrange(0,self.numParticleType)for _ in range(latticeLength)]
             self.fit=self.__class__.fitFunc(lattice = self.sequence,
                                             interactionMatrix = interactionEnergyMatrix,
                                             selfEnergyVector  = selfEnergyVector)
         else:
             self.vectorLength = vectorLength
-            self.sequence = [self.uniprng.uniform(self.minLimit,self.maxLimit) for _ in range(vectorLength)]
+            self.sequence = [np.array(self.uniprng.uniform(self.minLimit,self.maxLimit),dtype = 'float16') for _ in range(vectorLength)]
             self.fit=self.__class__.fitFunc(self.sequence)
 
         self.sigma=self.uniprng.uniform(0.9,0.1) #use "normalized" sigma
@@ -69,30 +71,43 @@ class Individual:
         if self.sigma < self.minSigma: self.sigma=self.minSigma
         if self.sigma > self.maxSigma: self.sigma=self.maxSigma
 
-        if self.problemType == 'Problem2':
-        #Float Vector CrossOver, note it cannot goes beyond the min and max value of x = [-5.12,5.12]
-            for i,x in enumerate(self.sequence):
-                #Shift the value of x to postive first
-                tmp = x + abs(self.minLimit)
-                #Bias can only be positive, there would be no negative bias
-                bias = (self.maxLimit-self.minLimit)*self.sigma*self.normprng.normalvariate(0,1)
-                tmp = bias + tmp
-                #Shift x back
-                mutated_value = tmp - abs(self.minLimit)
+        if self.sigma > 0.2:
+            if self.problemType == 'Problem2':
+            #Float Vector CrossOver, note it cannot goes beyond the min and max value of x = [-5.12,5.12]
+                for i,x in enumerate(self.sequence):
+                    #Shift the value of x to postive first
+                    tmp = x + abs(self.minLimit)
+                    #Bias can only be positive, there would be no negative bias
+                    bias = (self.maxLimit-self.minLimit)*self.normprng.normalvariate(self.sigma,1)
+                    tmp = bias + tmp
+                    #Shift x back
+                    mutated_value = tmp - abs(self.minLimit)
 
-                if mutated_value > self.maxLimit:
-                    self.sequence[i]  = self.maxLimit
-                elif mutated_value < self.minLimit:
-                    self.sequence[i]  = self.minLimit
-                else:
-                    self.sequence[i]  = mutated_value
-        else:
-            #QuantumLattice CrossOver
-            #Mutation by changing the quantum types within a lattice
-            for _ in range(len(self.sequence)):
-                self.uniprng.shuffle(self.sequence)
-                self.sequence.pop()
-                self.sequence.append(self.uniprng.randrange(0,self.numParticleType))
+                    if mutated_value > self.maxLimit:
+                        self.sequence[i]  = self.maxLimit
+                    elif mutated_value < self.minLimit:
+                        self.sequence[i]  = self.minLimit
+                    else:
+                        self.sequence[i]  = mutated_value
+            else:
+                #QuantumLattice CrossOver
+                #Mutation by changing the quantum types within a lattice
+                mu = self.sigma*len(self.sequence)
+                var = self.LearningRate * len(self.sequence)
+                UpperBound = len(self.sequence)
+                LowerBound = 1
+                NumOfMutateParticles = int(self.normprng.normalvariate(mu,mu))
+
+                if NumOfMutateParticles > UpperBound:
+                    NumOfMutateParticles = UpperBound
+                elif NumOfMutateParticles < LowerBound:
+                    NumOfMutateParticles = LowerBound
+
+                for _ in range(NumOfMutateParticles):
+                    self.uniprng.shuffle(self.sequence)
+                    self.sequence.pop()
+                    self.sequence.append(self.uniprng.randrange(0,self.numParticleType))
+
 
     def evaluateFitness(self,
                         interactionMatrix = None,

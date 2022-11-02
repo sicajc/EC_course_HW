@@ -142,11 +142,19 @@ def ev3(cfg):
 
     generationCountList = []
     bestFitnessList     = []
+    bestIndividualx = []
+    bestIndividualy = []
+
     generationCost = 0
 
     #evolution main loop
     for i in range(cfg.generationCount):
-
+        # Checking when it finds the Optimal solution
+        # if population.bestFitness == 41 :
+            # generationCost = i
+            # break
+        if i%500 == 0:
+            print(f"Current Generation is: {i}, bestFitness: {population.bestFitness}, bestIndividual: {population.bestIndividual}")
         generationCountList.append(i)
         #create initial offspring population by copying parent pop
         offspring=population.copy()
@@ -155,21 +163,24 @@ def ev3(cfg):
         offspring.conductTournament()
 
         #perform crossover
-        children = offspring.crossover()
+        offspring.crossover()
 
         #random mutation
-        children.mutate()
+        offspring.mutate()
 
         #update fitness values
-        children.evaluateFitness()
+        offspring.evaluateFitness()
 
         #survivor selection: elitist truncation using parents+offspring
-        population.combinePops(children)
+        population.combinePops(offspring)
         population.truncateSelect(cfg.populationSize)
 
         #ReEvaluate population
         population.evaluateFitness()
+
         bestFitnessList.append(population.bestFitness)
+        bestIndividualx.append(population.bestIndividual[0])
+        bestIndividualy.append(population.bestIndividual[1])
 
     population.print_info()
 
@@ -178,10 +189,11 @@ def ev3(cfg):
                data = bestFitnessList,
                title = f'{population.problemType} with {population.mode} BestFitness')
 
+    # print(f"Generatiion Cost: {generationCost}")
+
     if population.problemType == 'Problem2':
         x,y = population.bestIndividual
         z   = population.bestFitness
-
         #Generate 3-D Plot for Rastrigin function and its MIN and MAX
         fig = plt.figure(figsize=(4,4))
         ax = fig.add_subplot(projection='3d')
@@ -197,12 +209,13 @@ def ev3(cfg):
         zs =zs.reshape(X.shape)
 
         #Plot function is better
-        ax.plot_surface(X, Y, zs, cmap = cm.ocean)
-        ax.scatter(x,y,z, c = 'r', marker='o')
+        ax.plot_wireframe(X, Y, zs, cmap = cm.ocean)
+        ax.scatter(bestIndividualx,bestIndividualy,bestFitnessList,c = 'r',marker = 'o',s = 200)
         ax.text(x, y, z, population.mode + f'({x:.3},{y:.3},{z:.3})', color='red',size = 50)
         ax.set_title(title)
         ax.set_xlabel("x1")
         ax.set_ylabel("x2")
+        #Rotate the figure
         plt.savefig(filepath + title +".png")
         plt.show()
 

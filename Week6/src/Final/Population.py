@@ -105,7 +105,7 @@ class Population:
                     childx = self.population[index1].crossover(self.population[index2])
                     children.population.append(childx)
 
-        return children
+        self = children
 
     def conductTournament(self):
         # binary tournament
@@ -175,6 +175,7 @@ class Population:
         print(f"ProblemType:        {self.problemType}")
         print(f"Population Size:    {len(self.population)}")
         print(f"CrossOverFraction:  {self.crossoverFraction}")
+        print(f"Data Type:          {type(self.population[0].sequence[0])}")
         print(f"--------------------------------\nFitness Function:\n {self.fitFunc}")
 
         if self.problemType == 'Problem1':

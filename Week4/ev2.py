@@ -16,6 +16,7 @@ from random import Random
 import numpy as np
 import matplotlib.pyplot as plt
 import statistics as stat
+from mpl_toolkits.mplot3d import Axes3D
 
 
 #EV1 Config file class, used to process input data, simple checking that file is there, and error checking
