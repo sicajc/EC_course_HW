@@ -58,6 +58,9 @@ class Individual:
           else: non-domination return 0
 
         """
+        X_DOMINATES_Y = 1
+        NON_DOMINATION = 0
+        X_DOMINATED_BY_Y = -1
 
         # Check if dominates.
 
@@ -68,15 +71,15 @@ class Individual:
             dominationFlag_previous = dominationFlag_current
 
             if item > other.objectives[idx]:
-                dominationFlag_current = -1
+                dominationFlag_current = X_DOMINATED_BY_Y
             elif item < other.objectives[idx]:
-                dominationFlag_current = 1
+                dominationFlag_current = X_DOMINATES_Y
             else:
                 dominationFlag_current = dominationFlag_current
 
-            if dominationFlag_previous != 0 and dominationFlag_current != dominationFlag_previous:
+            if dominationFlag_previous != NON_DOMINATION and dominationFlag_current != dominationFlag_previous:
 
-                return 0
+                return NON_DOMINATION
 
         return dominationFlag_current
 
@@ -462,7 +465,7 @@ def main():
     # the effects by plotting the state space, objective space & ranked fronts
     #
     print('--- Starting Binary Tournaments ---')
-    popSize = 500
+    popSize = 1000
     numGenerations = 10
     prng = Random()
     prng.seed(456)

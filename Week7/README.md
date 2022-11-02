@@ -54,8 +54,7 @@ classDiagram
 
 ```
 # Implementation
-## Individual.Dominates()
-  Compares two individuals based on multi-objective dominance
+> Details in jupyter Notebook
 
 ## Prerequisite
   1. We must first understand what Optimal Pareto front is, and what it means by domination and non-domination sets.
@@ -67,4 +66,11 @@ https://www.youtube.com/watch?v=Hm2LK4vJzRw&list=PLbRMhDVUMnge0CU8o2gWwKXANADrpT
 ## NSGA-II Example
 https://www.youtube.com/watch?v=Yb82W2Bolqc&list=PLbRMhDVUMnge0CU8o2gWwKXANADrpTc1q&index=41
 
-##
+## Procedures
+  1. Random generate objective Individual list for Population
+  2. Determine the domination relationship of each individual
+  3. Generate and then assign the rank for each individual using the domination relationship of each individual
+  4. From rank, conduct the binary tournament, the one with lowest rank will eventually survive.
+  5. Distance function compute the relative distance of a specific front
+  6. From the rank and crowding distance of each individual, select the individual with the lower rank and larger crowding distance (higher diversity)
+  7. Repeats from 2 until running out of generation counts.
