@@ -257,11 +257,6 @@ class Population:
                         if individual not in front:
                             front.append(individual)
 
-                # for fronts in front:
-                    # print(f"{fronts.state}")
-                #
-                # print("------------")
-
             # From front assign the ranking value to pop
             for frontIndividual in front:
                 frontIndividual.frontRank = frontRankCnt
@@ -465,8 +460,8 @@ def main():
     # the effects by plotting the state space, objective space & ranked fronts
     #
     print('--- Starting Binary Tournaments ---')
-    popSize = 1000
-    numGenerations = 10
+    popSize = 800
+    numGenerations = 20
     prng = Random()
     prng.seed(456)
 
