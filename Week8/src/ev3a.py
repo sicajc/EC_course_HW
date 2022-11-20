@@ -118,8 +118,8 @@ def ev3(cfg):
     Population.crossoverFraction=cfg.crossoverFraction
 
     if cfg.evaluator == 'particles1d':
-        # Particles1D.selfEnergy=cfg.selfEnergy
-        # Particles1D.interactionEnergy=cfg.interactionEnergy
+        Particles1D.selfEnergy=cfg.selfEnergy
+        Particles1D.interactionEnergy=cfg.interactionEnergy
         IntVectorIndividual.fitFunc=Particles1D.fitnessFunc
         IntVectorIndividual.nLength=cfg.latticeLength
         IntVectorIndividual.nItems=cfg.numParticleTypes
@@ -127,15 +127,17 @@ def ev3(cfg):
         if len(cfg.selfEnergy) != cfg.numParticleTypes: raise Exception('Inconsistent selfEnergy vector length')
         if len(cfg.interactionEnergy) != cfg.numParticleTypes: raise Exception('Inconsistent interactionEnergy matrix size')
         Population.individualType=IntVectorIndividual
+        Population.fitFunc = Particles1D.fitnessFunc
     elif cfg.evaluator == 'rastrigin':
-        # Rastrigin.A=cfg.rastriginA
-        # Rastrigin.nVars=cfg.rastriginN
+        Rastrigin.A=cfg.rastriginA
+        Rastrigin.nVars=cfg.rastriginN
         MultivariateIndividual.minLimit=cfg.minLimit
         MultivariateIndividual.maxLimit=cfg.maxLimit
         MultivariateIndividual.fitFunc=Rastrigin.fitnessFunc
         MultivariateIndividual.nLength=cfg.rastriginN
         MultivariateIndividual.learningRate=1.0/math.sqrt(cfg.rastriginN)
         Population.individualType=MultivariateIndividual
+        Population.fitFunc = Rastrigin.fitnessFunc
     else:
         raise Exception('Unknown evaluator type: ' + str(cfg.evaluator))
 
@@ -168,7 +170,7 @@ def ev3(cfg):
         offspring.mutate()
 
         #update fitness values
-        offspring.evaluateFitness()
+        offspring.evaluateFitness(p)
 
         #survivor selection: elitist truncation using parents+offspring
         population.combinePops(offspring)

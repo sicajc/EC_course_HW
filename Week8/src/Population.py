@@ -16,6 +16,7 @@ class Population:
     uniprng=None
     crossoverFraction=None
     individualType=None
+    fitFunc = None
 
     def __init__(self, populationSize):
         """
