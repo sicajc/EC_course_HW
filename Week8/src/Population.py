@@ -34,34 +34,16 @@ class Population:
     def __setitem__(self,key,newValue):
         self.population[key]=newValue
 
-    def init_class_vars(self,cfg):
-        Individual.uniprng      = self.uniprng
-        Individual.learningRate = cfg.learningRate
-        Individual.fitFunc      =
-
     def copy(self):
         return copy.deepcopy(self)
 
-    def evaluateFitness(self):
+    def evaluateFitness(self,p):
         #
         #for individual in self.population: individual.evaluateFitness()
-        cpus = mp.cpu_count()
-        #print(cpus)
-        p = mp.Pool(initializer=self.init_class_vars,initargs=(config_params,), processes = cpus)
-
         states = [ind.state for ind in self.population]
-        fitFunc = self.population[0].__class__.fitFunc
-        #ind = self.population
-        print(f"State is of type : {type(states)}")
-        print(f"Function passed in is of type:{fitFunc}")
-
-        fitnesses = p.map(fitFunc, states) #<- Why NoneType even if the
-
-        p.close()
-        p.join()
-
-        for i in range(self.__len__) : self.population[i].fit = fitnesses[i]
-
+        fitnesses = p.map(self.fitFunc, states)
+        for i in range(len(self.population)):
+            self.population[i].fit = fitnesses[i]
 
     def mutate(self):
         for individual in self.population:

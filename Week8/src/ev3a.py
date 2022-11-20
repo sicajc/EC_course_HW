@@ -74,6 +74,13 @@ class EV3_Config:
         return str(yaml.dump(self.__dict__,default_flow_style=False))
 
 
+def init_class_vars(cfg):
+    if cfg.evaluator == 'particles1d':
+        Particles1D.selfEnergy = cfg.selfEnergy
+        Particles1D.interactionEnergy = cfg.interactionEnergy
+    elif cfg.evaluator == 'rastrigin':
+        Rastrigin.A = cfg.rastriginA
+        Rastrigin.nVars = cfg.rastriginN
 
 #Print some useful stats to screen
 def printStats(pop,gen):
@@ -111,8 +118,8 @@ def ev3(cfg):
     Population.crossoverFraction=cfg.crossoverFraction
 
     if cfg.evaluator == 'particles1d':
-        Particles1D.selfEnergy=cfg.selfEnergy
-        Particles1D.interactionEnergy=cfg.interactionEnergy
+        # Particles1D.selfEnergy=cfg.selfEnergy
+        # Particles1D.interactionEnergy=cfg.interactionEnergy
         IntVectorIndividual.fitFunc=Particles1D.fitnessFunc
         IntVectorIndividual.nLength=cfg.latticeLength
         IntVectorIndividual.nItems=cfg.numParticleTypes
@@ -121,8 +128,8 @@ def ev3(cfg):
         if len(cfg.interactionEnergy) != cfg.numParticleTypes: raise Exception('Inconsistent interactionEnergy matrix size')
         Population.individualType=IntVectorIndividual
     elif cfg.evaluator == 'rastrigin':
-        Rastrigin.A=cfg.rastriginA
-        Rastrigin.nVars=cfg.rastriginN
+        # Rastrigin.A=cfg.rastriginA
+        # Rastrigin.nVars=cfg.rastriginN
         MultivariateIndividual.minLimit=cfg.minLimit
         MultivariateIndividual.maxLimit=cfg.maxLimit
         MultivariateIndividual.fitFunc=Rastrigin.fitnessFunc
@@ -132,6 +139,12 @@ def ev3(cfg):
     else:
         raise Exception('Unknown evaluator type: ' + str(cfg.evaluator))
 
+
+    cpus = mp.cpu_count()
+    # create initial Population (random initialization)
+    p = mp.Pool(initializer=init_class_vars, initargs=(cfg,), processes=cpus)
+    population = Population(cfg.populationSize)
+    population.evaluateFitness(p)
 
     #create initial Population (random initialization)
     population=Population(cfg.populationSize)
