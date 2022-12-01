@@ -66,6 +66,7 @@ if __name__ == '__main__':
 
 ## Error usage of process Pool
 1. Process distributing should be made in main() instead of doing it inside a certain class function, otherwise it would just get destroyed and remake again and again?
+2.  You had better not instantiate Pool within the function itself
 
 ```python
 #Originally In class Population
@@ -86,3 +87,7 @@ def evaluateFitness(self):
     for i in range(self.__len__) : self.population[i].fit = fitnesses[i]
 
 ```
+
+3. You can actually use map within function as long as Pool is instantiated in a global perspective.
+4. So Pool shall be instantiated in global main
+5. The reason why we have to pass parameters in is because the individuals are all in another memory chunks.
