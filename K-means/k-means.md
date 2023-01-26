@@ -1,7 +1,7 @@
 # K-means
 ## Method1
 1. (Naive) approach of finding every possible outcome in search space of <br /> $repr = [c_1,c_2,c_3,c_4,c_5....]$
-   Finding clusters in such way is not practical when size of search space is large.
+Finding clusters in such way is not practical when size of search space is large.
 
 ## Method2
 1. Modify the vector Representations s.t. the serach space is shrunk.
@@ -30,3 +30,16 @@
 1. As long as data representation and mutationRate can be chosen, most problem can be conquered by EA.
 2. It enables you to generate clusters on a 2-D mesh graph.
 3. Fuzzy set theory and clustering is good at dealing with some problems.
+
+## Girvan-NewMan community structure algorithm
+1. Based on weight betweeness metrics and assume that clusters are delineated by regions.
+2. Connecting the clusters with high connectivities. Also it is easy to implement.
+3. Straightforward implementation cost $\Omicron (N^3)$ which is not good at all.
+4. Clever way of implementing this can prevent this expensive cost.
+
+
+# Hybridize
+1. With hybrid algorithm we can tailor the problem to specific sets. We are be able to extract huge performance from it. Because EA takes too much time, so we need to hybridize each steps of flow with other algorithms to speed up each sections.
+
+# Memetic algorithm
+1. Adaptive memetic algorithm is useful.
